@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API Tester — Aplikasi Kontak</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #f8fafc;
+    color: #0f172a;
+  }
+  h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: #64748b; margin-bottom: 24px; }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #f1f5f9;
+  }
+  h2 {
+    font-size: 18px;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h2 .num {
+    display: inline-flex;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .field { margin-bottom: 12px; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 4px;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  input:focus, select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+  }
+  button {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+  }
+  button.secondary {
+    background: #f1f5f9;
+    color: #475569;
+  }
+  button.secondary:hover {
+    background: #e2e8f0;
+    box-shadow: none;
+  }
+  .row { display: flex; gap: 8px; align-items: end; }
+  .row .field { flex: 1; margin-bottom: 0; }
+  pre {
+    background: #0f172a;
+    color: #a5f3fc;
+    padding: 16px;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-size: 13px;
+    margin-top: 16px;
+    max-height: 400px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    line-height: 1.5;
+  }
+  pre.ok { color: #86efac; }
+  pre.err { color: #fca5a5; }
+  .token-box {
+    background: #ecfdf5;
+    border: 1px solid #86efac;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 13px;
+    color: #065f46;
+    margin-top: 12px;
+    font-family: monospace;
+    word-break: break-all;
+  }
+  .status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status.ok { background: #d1fae5; color: #065f46; }
+  .status.err { background: #fee2e2; color: #991b1b; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .row { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🧪 API Tester</h1>
+<p class="subtitle">Aplikasi Kontak — Laravel REST API • <code>http://127.0.0.1:8000/api</code></p>
+
+<!-- 1. REGISTER -->
+<div class="card">
+  <h2><span class="num">1</span> Register</h2>
+  <div class="grid-2">
+    <div class="field"><label>Nama</label><input id="regName" value="Budi"></div>
+    <div class="field"><label>Email</label><input id="regEmail" value="budi@test.com"></div>
+  </div>
+  <div class="field"><label>Password</label><input id="regPassword" value="secret123" type="text"></div>
+  <button onclick="doRegister()">POST /register</button>
+  <pre id="regOut">—</pre>
+</div>
+
+<!-- 2. LOGIN -->
+<div class="card">
+  <h2><span class="num">2</span> Login</h2>
+  <div class="grid-2">
+    <div class="field"><label>Email</label><input id="logEmail" value="budi@test.com"></div>
+    <div class="field"><label>Password</label><input id="logPassword" value="secret123" type="text"></div>
+  </div>
+  <button onclick="doLogin()">POST /login</button>
+  <pre id="logOut">—</pre>
+</div>
+
+<!-- 3. TOKEN -->
+<div class="card">
+  <h2><span class="num">3</span> Bearer Token</h2>
+  <p style="color:#64748b; font-size:13px; margin:0 0 12px">Token otomatis tersimpan setelah Login/Register. Bisa juga isi manual.</p>
+  <div class="field"><input id="token" placeholder="Belum ada token — silakan login dulu"></div>
+  <div id="tokenDisplay" class="token-box" style="display:none;"></div>
+</div>
+
+<!-- 4. LIST -->
+<div class="card">
+  <h2><span class="num">4</span> List Kontak</h2>
+  <button onclick="doList()">GET /kontak</button>
+  <pre id="listOut">—</pre>
+</div>
+
+<!-- 5. TAMBAH KONTAK -->
+<div class="card">
+  <h2><span class="num">5</span> Tambah Kontak</h2>
+  <div class="grid-2">
+    <div class="field"><label>Nama</label><input id="cNama" value="Ani"></div>
+    <div class="field"><label>Alamat</label><input id="cAlamat" value="Jimbaran"></div>
+  </div>
+  <div class="field"><label>Tanggal Lahir</label><input id="cTanggal" type="date" value="2001-05-10"></div>
+  <div class="row" style="margin-bottom:12px;">
+    <div class="field">
+      <label>Jenis</label>
+      <select id="cJenis"><option>HP</option><option>Rumah</option><option>Kantor</option></select>
+    </div>
+    <div class="field">
+      <label>Nomor</label>
+      <input id="cNomor" value="08123456789">
+    </div>
+  </div>
+  <button onclick="doCreate()">POST /kontak</button>
+  <pre id="createOut">—</pre>
+</div>
+
+<!-- 6. HAPUS -->
+<div class="card">
+  <h2><span class="num">6</span> Hapus Kontak</h2>
+  <div class="field"><label>ID Kontak</label><input id="delId" value="1" type="number"></div>
+  <button onclick="doDelete()">DELETE /kontak/{id}</button>
+  <pre id="delOut">—</pre>
+</div>
+
+<script>
+const BASE = 'http://127.0.0.1:8000/api';
+
+function getToken() { return document.getElementById('token').value.trim(); }
+
+function setOut(id, ok, data) {
+  const el = document.getElementById(id);
+  el.className = ok ? 'ok' : 'err';
+  el.textContent = (ok ? '✅ ' : '❌ ') + JSON.stringify(data, null, 2);
+}
+
+function updateTokenDisplay() {
+  const t = getToken();
+  const box = document.getElementById('tokenDisplay');
+  if (t) {
+    box.style.display = 'block';
+    box.textContent = '🔑 Token aktif: ' + t.slice(0, 30) + '...' + (t.length > 30 ? t.slice(-10) : '');
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+async function doRegister() {
+  const body = {
+    name: document.getElementById('regName').value,
+    email: document.getElementById('regEmail').value,
+    password: document.getElementById('regPassword').value,
+  };
+  try {
+    const res = await fetch(`${BASE}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    setOut('regOut', res.ok, data);
+    if (data.access_token) {
+      document.getElementById('token').value = data.access_token;
+      document.getElementById('logEmail').value = body.email;
+      updateTokenDisplay();
+    }
+  } catch (e) {
+    setOut('regOut', false, { error: e.message });
+  }
+}
+
+async function doLogin() {
+  const body = {
+    email: document.getElementById('logEmail').value,
+    password: document.getElementById('logPassword').value,
+  };
+  try {
+    const res = await fetch(`${BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    setOut('logOut', res.ok, data);
+    if (data.access_token) {
+      document.getElementById('token').value = data.access_token;
+      updateTokenDisplay();
+    }
+  } catch (e) {
+    setOut('logOut', false, { error: e.message });
+  }
+}
+
+async function doList() {
+  try {
+    const res = await fetch(`${BASE}/kontak`, {
+      headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+    });
+    const data = await res.json();
+    setOut('listOut', res.ok, data);
+  } catch (e) {
+    setOut('listOut', false, { error: e.message });
+  }
+}
+
+async function doCreate() {
+  const body = {
+    nama: document.getElementById('cNama').value,
+    alamat: document.getElementById('cAlamat').value,
+    tanggal_lahir: document.getElementById('cTanggal').value,
+    phones: [{
+      jenis: document.getElementById('cJenis').value,
+      nomor_telepon: document.getElementById('cNomor').value,
+    }],
+  };
+  try {
+    const res = await fetch(`${BASE}/kontak`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    setOut('createOut', res.ok, data);
+  } catch (e) {
+    setOut('createOut', false, { error: e.message });
+  }
+}
+
+async function doDelete() {
+  const id = document.getElementById('delId').value;
+  try {
+    const res = await fetch(`${BASE}/kontak/${id}`, {
+      method: 'DELETE',
+      headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+    });
+    const data = await res.json();
+    setOut('delOut', res.ok, data);
+  } catch (e) {
+    setOut('delOut', false, { error: e.message });
+  }
+}
+
+document.getElementById('token').addEventListener('input', updateTokenDisplay);
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Laravel
+kontak-api/vendor/
+kontak-api/node_modules/
+kontak-api/.env
+kontak-api/.env.backup
+kontak-api/.phpunit.result.cache
+kontak-api/storage/*.key
+kontak-api/storage/logs/*.log
+kontak-api/database/*.sqlite
+kontak-api/database/*.sqlite-journal
+
+# React
+kontak-frontend/node_modules/
+kontak-frontend/dist/
+kontak-frontend/.vite/
+
+# Node
+npm-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
