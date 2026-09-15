@@ -20,6 +20,7 @@ Aplikasi manajemen kontak berbasis web dengan arsitektur **decoupled** (backend 
 
 ## Struktur Folder
 
+```
 tugas-kontak-laravel-react/
 ├── kontak-api/                    # Backend Laravel
 │   ├── app/
@@ -51,7 +52,7 @@ tugas-kontak-laravel-react/
 ├── postman_collection.json        # Koleksi Postman
 ├── .gitignore
 └── README.md
-
+```
 ---
 
 ## Prasyarat
